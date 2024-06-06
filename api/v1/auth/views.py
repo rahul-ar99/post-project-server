@@ -20,11 +20,36 @@ def show(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+def profile(request):
+    username = request.data['username']
+
+    instance = User.objects.get(username=username)
+
+    context = {
+        request:"request"
+    }
+    serializer = UserSerializers(instance, context=context)
+    response_data={
+        "status_code":6000,
+        "data":serializer.data
+    }
+    return Response(response_data)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def create(request):
     username = request.data['username']
     email = request.data['email']
     role = request.data['role']
     password = request.data['password']
+
+
+    # print("Request data:", request.data)
+    # print("Username:", username)
+    # print("Email:", email)
+    # print("Role:", role)
+    # print("Password:", password)
 
     instance = User.objects.all()
     serializer = UserSerializers(instance, many=True)
@@ -42,7 +67,9 @@ def create(request):
         'password': password
     }
     serializer = UserCreateSerializer(data=data)
+    print(serializer)
     if serializer.is_valid():
+
         serializer.save()
         response_data={
             "status_code":2000,
@@ -55,3 +82,4 @@ def create(request):
             "data":serializer.errors
         }
         return Response(response_data, status=400)
+    

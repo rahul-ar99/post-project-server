@@ -3,7 +3,7 @@ from django.db import models
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    featured_image = models.ImageField(upload_to="posts/images/")
+    featured_image = models.ImageField(upload_to="posts/images/", default='posts/images/imagesasds_n3baeiR.jpeg')
     description = models.TextField()
     like = models.IntegerField(default=0,null=False, blank=False)
     created_by = models.CharField(max_length=255)
