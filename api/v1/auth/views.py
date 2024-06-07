@@ -55,9 +55,14 @@ def create(request):
     serializer = UserSerializers(instance, many=True)
     if(User.objects.filter(username=username)).exists():
         response_data={
-            "status_code":6000,
-            "data":serializer.data,
-            "message":"user already exist"
+            "status_code":6001,
+            "message":"username already exist"
+        }
+        return Response(response_data)
+    if(User.objects.filter(email=email)).exists():
+        response_data={
+            "status_code":6001,
+            "message":"email already exist"
         }
         return Response(response_data)
     data = {
@@ -72,13 +77,14 @@ def create(request):
 
         serializer.save()
         response_data={
-            "status_code":2000,
-            "data":serializer.data
+            "status_code":6000,
+            "message":"User created Sucessfully"
+
         }
         return Response(response_data, status=201)
     else:
         response_data={
-            "status_code":2001,
+            "status_code":6001,
             "data":serializer.errors
         }
         return Response(response_data, status=400)

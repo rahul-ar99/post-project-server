@@ -40,12 +40,21 @@ def create_post(request):
     context = {
         "request":request
     }
-
     serializer = PostCreateSerializer(data=data)
     if serializer.is_valid():
         serializer.save(created_by=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        response_data = {
+            "status_code":6000,
+            "data":serializer.data,
+            "message":"this is working",
+        }
+        return Response(response_data)
+    response_data = {
+        "status_code":6001,
+        "data":serializer.errors,
+        "message":"Invalid Action",
+    }
+    return Response(response_data)
 
 
 @api_view(["GET"])
@@ -57,7 +66,6 @@ def view(request, pk):
             'request':request
         }
         serializer = PostDetailSerializer(instance, context=context)
-
         response_data = {
             "status_code":6000,
             "data":serializer.data,
@@ -65,23 +73,33 @@ def view(request, pk):
         }
         return Response(response_data)
     
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like(request, pk):
     if Post.objects.filter(pk=pk).exists():
         instance = Post.objects.get(pk=pk)
-        context = {
-            "request":request
-        }    
         action = request.data['action']
         serializer = PostLikeSerializer(instance)
-        
         if action == "like":
             new_like_count = serializer.add_like()
         elif action == "unlike":
             new_like_count = serializer.remove_like()
         else:
-            return Response({"error":"Invalid action"},status=status.HTTP_400_BAD_REQUEST)
-        
+            response_data = {
+                "status_code":6001,
+                "message":"Invalid action",
+            }
+            return Response(response_data)
+        response_data = {
+            "status_code":6000,
+            "data":{"like":new_like_count},
+            "message":"Invalid action",
+        }
         return Response({"newLikeCount":new_like_count}, status=status.HTTP_200_OK)
-
+    else:
+        response_data = {
+            "status_code":6001,
+            "message":"Your given id is not valid",
+        }
+        return Response(response_data)
