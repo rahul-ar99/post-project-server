@@ -8,7 +8,6 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ("id","username","role","is_superuser","email",)
 
 
-# for all content
 class UserAllDetailsSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -21,8 +20,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'role', 'password']
     extra_kwargs = {'password': {'write_only': True}}
 
-
-    
     def create(self, validate_data):
         role = validate_data.get('role',User.Role.ADMIN)
         print(role)
@@ -32,7 +29,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 email=validate_data['email'],
                 role=validate_data.get('role', User.Role.CUSTOMER)
             )
-            # print(user.role)
             user.set_password(validate_data['password'])
             user.save()
             return user
@@ -42,7 +38,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 email=validate_data['email'],
                 role=validate_data.get('role', User.Role.CUSTOMER)
             )
-            # print(user.role)
             user.set_password(validate_data['password'])
             user.save()
             return user

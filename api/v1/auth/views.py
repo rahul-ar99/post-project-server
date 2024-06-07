@@ -44,13 +44,6 @@ def create(request):
     role = request.data['role']
     password = request.data['password']
 
-
-    # print("Request data:", request.data)
-    # print("Username:", username)
-    # print("Email:", email)
-    # print("Role:", role)
-    # print("Password:", password)
-
     instance = User.objects.all()
     serializer = UserSerializers(instance, many=True)
     if(User.objects.filter(username=username)).exists():

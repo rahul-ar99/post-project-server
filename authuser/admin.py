@@ -12,14 +12,12 @@ class UserAdmin(DefaultUserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
         ('Role', {'fields': ('role',)}),
     )
-
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'password1', 'password2', 'role'),
         }),
     )
-
     list_display = ('username', 'role', 'email','password','is_superuser')
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
